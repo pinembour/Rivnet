@@ -19,6 +19,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^firewall/', include('firewall.urls')),
    # url(r'^optimizer/', include('optimizer.urls')),
-   # url(r'^clients_config/', include('clients_config.urls')),
+    url(r'^clients_config/', include('clients_config.urls')),
     url(r'^admin/', admin.site.urls),
 ]

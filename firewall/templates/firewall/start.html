@@ -9,7 +9,9 @@
     <h1>Start log:</h1>
 
     <code>
-    {{ start_log | safe }}
+        {% for line in start_log %}
+            {{ line | safe }}<br />
+        {% endfor %}
     </code>
 
 </body>

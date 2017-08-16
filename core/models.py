@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding:utf-8 -*
+#
+
 from django.db import models
 from django.db.models import Q
 import unicodedata
@@ -51,7 +55,7 @@ class Supplier(models.Model):
 class Mac(models.Model):
     address = models.CharField(max_length=32, unique=True, blank=False)
 
-    client = models.ForeignKey(Client, models.CASCADE, null=False, default=0);
+    client = models.ForeignKey(Client, models.CASCADE, null=False);
 
     def __str__(self):
         return str(self.client) + " : " + self.address
@@ -91,4 +95,6 @@ class Input(models.Model):
 
     def __str__(self):
         return (str(self.supplier) + ": " + str(self.port))
+
+
 

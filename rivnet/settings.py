@@ -82,6 +82,33 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+    #'default': {
+    #    'ENGINE': 'mysql.connector.django',
+    #    'NAME': 'bite',
+    #    'USER': 'nabos',
+    #    'PASSWORD': ':Banane147',
+    #    'HOST': 'localhost',
+    #    'PORT': '3306',
+    #}
+    #'default': {
+    #    'ENGINE': 'django.db.backends.postgresql',
+    #    'NAME': 'bite',
+    #    'USER': 'nabos',
+    #    'PASSWORD': '',
+    #    'HOST': '192.168.1.92',
+    #    'PORT': '5432',
+    #}
+    #'default': {
+    #    'OPTIONS': {
+    #        'init_command': 'SET storage_engine=ndbcluster',
+    #    },
+    #    'ENGINE': 'mysqlndb',
+    #    'NAME': 'localhost',
+    #    'USER': 'nabos',
+    #    'PASSWORD': ':Banane147',
+    #    'HOST': 'localhost',
+    #    'PORT': '',
+    #}
 }
 
 
