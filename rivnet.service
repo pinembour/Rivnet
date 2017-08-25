@@ -8,7 +8,7 @@ Type=simple
 User=rivnet
 Group=rivnet
 WorkingDirectory=/opt/rivnet
-ExecStart=/usr/bin/python3 /opt/rivnet/manage.py runserver 10.20.0.130:8000
+ExecStart=/usr/bin/python3 /opt/rivnet/manage.py runserver 0.0.0.0:8000
 Restart=always
 Environment=USER=rivnet HOME=/opt/rivnet
 
