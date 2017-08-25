@@ -65,7 +65,7 @@ class ActivationAdmin(admin.ModelAdmin):
     subscription_view.short_description = 'Subscription'
 
     def time_left_view(self, obj):
-        return '%i month(s) ' % (obj.creation.month + obj.duration - datetime.now().date().month)
+        return '%i month(s) ' % (obj.time_left())
     time_left_view.short_description = 'Time left'
 
     list_editable = ('active',)

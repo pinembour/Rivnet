@@ -2,6 +2,8 @@
 # -*- coding:utf-8 -*
 #
 
+from datetime import datetime
+
 from django.db import models
 from django.db.models import Q
 import unicodedata
@@ -55,7 +57,7 @@ class Supplier(models.Model):
 class Mac(models.Model):
     address = models.CharField(max_length=32, unique=True, blank=False)
 
-    client = models.ForeignKey(Client, models.CASCADE, null=False);
+    client = models.ForeignKey(Client, models.CASCADE, null=False, related_name="macs");
 
     def __str__(self):
         return str(self.client) + " : " + self.address
@@ -79,19 +81,22 @@ class Activation(models.Model):
 
     creation = models.DateField(auto_now_add=True)
 
+    def time_left(self):
+        return self.creation.month + self.duration - datetime.now().date().month
+
     def __str__(self):
         return  str(self.supplier) + ": " + str(self.client)
 
 class Forward(models.Model):
     port = models.ForeignKey(Port, null=False)
-    supplier = models.ForeignKey(Supplier, null=False)
+    supplier = models.ForeignKey(Supplier, null=False, related_name="forwards")
 
     def __str__(self):
         return (str(self.supplier) + ": " + str(self.port))
 
 class Input(models.Model):
     port = models.ForeignKey(Port, null=False)
-    supplier = models.ForeignKey(Supplier, null=False)
+    supplier = models.ForeignKey(Supplier, null=False, related_name="inputs")
 
     def __str__(self):
         return (str(self.supplier) + ": " + str(self.port))
