@@ -1,0 +1,14 @@
+*
+./*
+
+!./.git
+!./.gitignore
+!./README
+
+!./manager.py
+
+!./rivnet
+!./core
+!./firewall
+!./clients_config
+!./optimizer
