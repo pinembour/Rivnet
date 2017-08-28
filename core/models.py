@@ -43,10 +43,12 @@ class Client(models.Model):
 
         return identifier
 
-class Supplier(models.Model):
+class Server(models.Model):
     ip = models.CharField(max_length=32, unique=True, blank=False)
     server_name = models.CharField(max_length=50, unique=True, blank=False)
     client = models.ForeignKey(Client, models.CASCADE, null=False)
+    rivnet = models.BooleanField(default=True, null=False)
+    active = models.BooleanField(default=True, null=False)
 
     def getTotalActivations(self):
         return len(self.activation_set.all())
@@ -75,7 +77,7 @@ class Activation(models.Model):
     active = models.BooleanField(default=True, null=False)
 
     client = models.ForeignKey(Client, models.CASCADE, null=False, unique=False)
-    supplier = models.ForeignKey(Supplier, default=0, null=False)
+    supplier = models.ForeignKey(Server, default=0, null=False)
 
     duration = models.IntegerField(default=5, null=False)
 
@@ -89,14 +91,14 @@ class Activation(models.Model):
 
 class Forward(models.Model):
     port = models.ForeignKey(Port, null=False)
-    supplier = models.ForeignKey(Supplier, null=False, related_name="forwards")
+    supplier = models.ForeignKey(Server, null=False, related_name="forwards")
 
     def __str__(self):
         return (str(self.supplier) + ": " + str(self.port))
 
 class Input(models.Model):
     port = models.ForeignKey(Port, null=False)
-    supplier = models.ForeignKey(Supplier, null=False, related_name="inputs")
+    supplier = models.ForeignKey(Server, null=False, related_name="inputs")
 
     def __str__(self):
         return (str(self.supplier) + ": " + str(self.port))

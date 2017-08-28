@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from django.utils.html import mark_safe
 
 from django.contrib import admin
 
 from .models import Port
 from .models import Client
-from .models import Supplier
+from .models import Server
 from .models import Mac
 from .models import Activation
 from .models import Forward
@@ -33,13 +34,17 @@ class ClientAdmin(admin.ModelAdmin):
 
     search_fields = ('nickname', 'first_name', 'last_name')
 
-class SupplierAdmin(admin.ModelAdmin):
+class ServerAdmin(admin.ModelAdmin):
     view_on_site = False
 
-    list_display = ('server_name', 'client', 'ip')
+    list_display = ('server_name', 'client', 'ip', 'restart_firewall', 'active', 'rivnet')
     list_display_links = ('server_name', 'client', 'ip')
 
     search_fields = ('server_name', 'client', 'ip')
+
+    def restart_firewall(self, obj):
+        return mark_safe('<a href="http://' + obj.ip + ':8000/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
+
 
 class MacAdmin(admin.ModelAdmin):
     view_on_site = False
@@ -99,7 +104,7 @@ class InputAdmin(admin.ModelAdmin):
 
 admin.site.register(Port, PortAdmin)
 admin.site.register(Client, ClientAdmin)
-admin.site.register(Supplier, SupplierAdmin)
+admin.site.register(Server, ServerAdmin)
 admin.site.register(Mac, MacAdmin)
 admin.site.register(Activation, ActivationAdmin)
 admin.site.register(Forward, ForwardAdmin)

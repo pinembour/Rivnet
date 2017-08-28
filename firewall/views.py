@@ -10,7 +10,7 @@ from django.db.models import Q
 
 from core.models import Port
 from core.models import Client
-from core.models import Supplier
+from core.models import Server
 from core.models import Mac
 from core.models import Activation
 from core.models import Forward
@@ -38,8 +38,8 @@ def __context():
 
     supplier = None
     try:
-        supplier = Supplier.objects.get(server_name = settings.server_name)
-    except Supplier.DoesNotExist:
+        supplier = Server.objects.get(server_name = settings.server_name)
+    except Server.DoesNotExist:
         return HttpResponse("Settings are misconfigured")
 
     res["local_tcp_ports"] = []

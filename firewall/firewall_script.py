@@ -24,7 +24,7 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
 
     #Local services
     if local_tcp_ports:
-        res += __execute('iptables -A INPUT -p tcp -m multiport --dports 80,8000,' + ','.join(local_tcp_ports) + ' -m state --state NEW -j ACCEPT')
+        res += __execute('iptables -A INPUT -p tcp -m multiport --dports 22,80,8000,' + ','.join(local_tcp_ports) + ' -m state --state NEW -j ACCEPT')
     if local_udp_ports:
         res += __execute('iptables -A INPUT -p udp -m multiport --dports ' + ','.join(local_udp_ports) + ' -m state --state NEW -j ACCEPT')
 

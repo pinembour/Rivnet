@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from core.models import Mac
 from core.models import Activation
+from core.models import Server
 
 def gatewayByMac(request, mac):
 
@@ -38,3 +39,29 @@ def gatewayByMac(request, mac):
 
 
     return HttpResponse(gateway)
+
+def servers(request):
+
+    querySet = Server.objects.filter(active = True).filter(rivnet = True)
+
+    print(querySet)
+
+    servers = ""
+
+    if(querySet.exists()):
+
+        for server in querySet.all():
+
+            servers = server.ip + ":8000,"
+
+        servers = servers.strip(",")
+
+    else:
+
+        print("ATTENTION !!! AUCUN SERVERS RIVNET ACTIF CONFIGURÉ !!! LES CLIENTS RISQUENT DE CORROMPRE LEUR CONFIGURATION !!!")
+
+        servers = "Erreur ! Merci de contacter votre administrateur réseau !"
+        return HttpResponse(servers, status=500)
+
+
+    return HttpResponse(servers)
