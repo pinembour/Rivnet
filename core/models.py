@@ -35,7 +35,8 @@ def __synchronize_all():
 
 @receiver(post_save, dispatch_uid="synchronize databases")
 def sync(sender, instance, **kwargs):
-    if(settings.role == "Master"):
+    if(settings.master):
+        print("Synchronization....")
         __synchronize_all()
 
 class Port(models.Model):
