@@ -11,6 +11,8 @@ from django.dispatch import receiver
 import unicodedata
 import subprocess
 
+from . import settings
+
 def __execute(command, shell=False):
     command_split = str(command).split()
     if shell:
@@ -33,7 +35,8 @@ def __synchronize_all():
 
 @receiver(post_save, dispatch_uid="synchronize databases")
 def sync(sender, instance, **kwargs):
-    __synchronize_all()
+    if(settings.role == "Master"):
+        __synchronize_all()
 
 class Port(models.Model):
     name = models.CharField(max_length=10, blank=False)
