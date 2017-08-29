@@ -6,7 +6,34 @@ from datetime import datetime
 
 from django.db import models
 from django.db.models import Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 import unicodedata
+import subprocess
+
+def __execute(command, shell=False):
+    command_split = str(command).split()
+    if shell:
+        return [command + ": OK: " + str(subprocess.check_output(command_split, shell=True))]
+    else:
+        return [command + ": OK: " + str(subprocess.check_output(command_split))]
+
+def __command(ip):
+    return "scp -i /home/rivnet/.ssh/id_rsa /opt/rivnet/db.sqlite3 rivnet@" + ip + ":/opt/rivnet/db.sqlite3"
+
+def __synchronize(ip, ip_alt):
+    try:
+        __execute(__command(ip))
+    except Exception:
+        __execute(__command(ip_alt))
+
+def __synchronize_all():
+    for server in Server.objects.filter(rivnet = True):
+        __synchronize(server.ip, server.alt)
+
+@receiver(post_save, dispatch_uid="synchronize databases")
+def sync(sender, instance, **kwargs):
+    __synchronize_all()
 
 class Port(models.Model):
     name = models.CharField(max_length=10, blank=False)
@@ -45,6 +72,7 @@ class Client(models.Model):
 
 class Server(models.Model):
     ip = models.CharField(max_length=32, unique=True, blank=False)
+    alt = models.CharField(max_length=32, blank=True, default="")
     server_name = models.CharField(max_length=50, unique=True, blank=False)
     client = models.ForeignKey(Client, models.CASCADE, null=False)
     rivnet = models.BooleanField(default=True, null=False)
