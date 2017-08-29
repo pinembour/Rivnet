@@ -52,7 +52,7 @@ def servers(request):
 
         for server in querySet.all():
 
-            servers = server.ip + ":8000,"
+            servers = servers + server.ip + ":8000,"
 
         servers = servers.strip(",")
 
