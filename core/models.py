@@ -6,38 +6,8 @@ from datetime import datetime
 
 from django.db import models
 from django.db.models import Q
-from django.db.models.signals import post_save
 from django.dispatch import receiver
 import unicodedata
-import subprocess
-
-from . import settings
-
-def __execute(command, shell=False):
-    command_split = str(command).split()
-    if shell:
-        return [command + ": OK: " + str(subprocess.check_output(command_split, shell=True))]
-    else:
-        return [command + ": OK: " + str(subprocess.check_output(command_split))]
-
-def __command(ip):
-    return "scp -i /home/rivnet/.ssh/id_rsa /opt/rivnet/db.sqlite3 rivnet@" + ip + ":/opt/rivnet/db.sqlite3"
-
-def __synchronize(ip, ip_alt):
-    try:
-        __execute(__command(ip))
-    except Exception:
-        __execute(__command(ip_alt))
-
-def __synchronize_all():
-    for server in Server.objects.filter(rivnet = True):
-        __synchronize(server.ip, server.alt)
-
-@receiver(post_save, dispatch_uid="synchronize databases")
-def sync(sender, instance, **kwargs):
-    if(settings.master):
-        print("Synchronization....")
-        __synchronize_all()
 
 class Port(models.Model):
     name = models.CharField(max_length=10, blank=False)
@@ -134,6 +104,4 @@ class Input(models.Model):
 
     def __str__(self):
         return (str(self.supplier) + ": " + str(self.port))
-
-
 

@@ -37,14 +37,16 @@ class ClientAdmin(admin.ModelAdmin):
 class ServerAdmin(admin.ModelAdmin):
     view_on_site = False
 
-    list_display = ('server_name', 'client', 'ip', 'restart_firewall', 'active', 'rivnet')
+    list_display = ('server_name', 'client', 'ip', 'restart_firewall', 'synchronize', 'active', 'rivnet')
     list_display_links = ('server_name', 'client', 'ip')
 
     search_fields = ('server_name', 'client', 'ip')
 
     def restart_firewall(self, obj):
-        return mark_safe('<a href="http://' + obj.ip + ':8000/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
+        return mark_safe('<a target="_blank" href="http://' + obj.ip + ':8000/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
 
+    def synchronize(self, obj):
+        return mark_safe('<a target="_blank" href="http://' + obj.ip + ':8000/core/synchronize"><input type="button" value="Synchronize"></input></a>')
 
 class MacAdmin(admin.ModelAdmin):
     view_on_site = False
