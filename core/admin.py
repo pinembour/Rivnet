@@ -12,6 +12,11 @@ from .models import Activation
 from .models import Forward
 from .models import Input
 
+class MacAdminInline(admin.TabularInline):
+    model = Mac
+    extra = 0
+
+
 class PortAdmin(admin.ModelAdmin):
     view_on_site = False
 
@@ -33,6 +38,8 @@ class ClientAdmin(admin.ModelAdmin):
     list_filter = ('unrestricted',)
 
     search_fields = ('nickname', 'first_name', 'last_name')
+
+    inlines = [MacAdminInline,]
 
 class ServerAdmin(admin.ModelAdmin):
     view_on_site = False
