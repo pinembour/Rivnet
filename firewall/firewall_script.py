@@ -9,6 +9,23 @@ def __execute(command, shell=False):
         return [command + ": OK: " + str(subprocess.check_output(command_split, shell=True))]
     else:
         return [command + ": OK: " + str(subprocess.check_output(command_split))]
+    return [command]
+
+def __sub(tab, size):
+    res = []
+    temp = []
+    i = 0
+    for a in tab:
+        temp.append(a)
+        i += 1
+        if i == size:
+            i = 0
+            res.append(temp)
+            temp.flush()
+    if i > 0:
+        res.append(temp)
+
+    return res
 
 def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_admin_ip, lan_admin_r, local_tcp_ports, local_udp_ports):
     res = []
@@ -26,45 +43,15 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
 
     #Local services
     if local_tcp_ports:
-        temp = ','.join(local_tcp_ports).split(',')
-        tcp_rules = int(len(temp) / 10)
-        last = int(len(temp) % 10)
-
-        if tcp_rules > 0:
-            for i in range(0, tcp_rules+1):
-                tcp_ports_final=[]
-                if i < tcp_rules:
-                    for j in range(0, 9):
-                        tcp_ports_final = tcp_ports_final + [temp[i*10 + j]]
-                else:
-                    for j in range(0, last):
-                        tcp_ports_final = tcp_ports_final + [temp[i*10 + j]]
-
-                if tcp_ports_final:
-                    res += __execute('iptables -A INPUT -p tcp -m multiport --dports ' + ','.join(tcp_ports_final) + ' -m state --state NEW -j ACCEPT')
-        else:
-            res += __execute('iptables -A INPUT -p tcp -m multiport --dports ' + ','.join(local_tcp_ports) + ' -m state --state NEW -j ACCEPT')
+        tab = __sub(','.join(local_tcp_ports).split(), 11)
+        for a in tab:
+            res += __execute('iptables -A INPUT -p tcp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
 
 
     if local_udp_ports:
-        temp = ','.join(local_udp_ports).split(',')
-        udp_rules = int(len(temp) / 10)
-        last = int(len(temp) % 10)
-
-        if udp_rules > 0:
-            for i in range(0, udp_rules+1):
-                udp_ports_final=[]
-                if i < udp_rules:
-                    for j in range(0, 9):
-                        udp_ports_final = udp_ports_final + [temp[i*10 + j]]
-                else:
-                    for j in range(0, last):
-                        udp_ports_final = udp_ports_final + [temp[i*10 + j]]
-
-                if udp_ports_final:
-                    res += __execute('iptables -A INPUT -p udp -m multiport --dports ' + ','.join(udp_ports_final) + ' -m state --state NEW -j ACCEPT')
-        else:
-            res += __execute('iptables -A INPUT -p udp -m multiport --dports ' + ','.join(local_udp_ports) + ' -m state --state NEW -j ACCEPT')
+        tab = __sub(','.join(local_udp_ports).split(), 10)
+        for a in tab:
+            res += __execute('iptables -A INPUT -p udp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
 
     # ICMP : ping request
     res += __execute('iptables -A INPUT -p icmp -j ACCEPT')
@@ -120,46 +107,14 @@ def __route(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_a
             else:
 
                 if forward_tcp_ports:
-                    temp = ','.join(forward_tcp_ports).split(',')
-                    tcp_rules = int(len(temp) / 10)
-                    last = int(len(temp) % 10)
-
-                    if tcp_rules > 0 :
-                        for i in range(0, tcp_rules+1):
-                            tcp_ports_final=[]
-                            if i < tcp_rules:
-                                for j in range(0, 9):
-                                    tcp_ports_final = tcp_ports_final + [temp[i*10 + j]]
-                            elif last > 0:
-                                for j in range(0, last):
-                                    tcp_ports_final = tcp_ports_final + [temp[i*10 + j]]
-
-                        if tcp_ports_final:
-                            res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p tcp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(tcp_ports_final) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
-                    else:
-                        res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p tcp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(forward_tcp_ports) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
+                    tab = __sub(','.join(forward_tcp_ports).split(), 10)
+                    for a in tab:
+                        res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p tcp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 
                 if forward_udp_ports:
-                    temp = ','.join(forward_udp_ports).split(',')
-                    udp_rules = int(len(temp) / 10)
-                    last = int(len(temp) % 10)
-
-                    if udp_rules > 0:
-                        for i in range(0, udp_rules+1):
-                            udp_ports_final=[]
-                            if i < udp_rules:
-                                res += ["a"]
-                                for j in range(0, 9):
-                                    udp_ports_final = udp_ports_final + [temp[i*10 + j]]
-                            else:
-                                res += ["b"]
-                                for j in range(0, last):
-                                    udp_ports_final = udp_ports_final + [temp[i*10 + j]]
-
-                        if udp_ports_final:
-                            res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p udp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(udp_ports_final) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
-                    else:
-                        res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p udp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(forward_udp_ports) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
+                    tab = __sub(','.join(forward_udp_ports).split(), 10)
+                    for a in tab:
+                        res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p udp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 
 
     res += ["\n"]
