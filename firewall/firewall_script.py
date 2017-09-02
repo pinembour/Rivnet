@@ -15,13 +15,18 @@ def __sub(tab, size):
     res = []
     temp = []
     i = 0
+    print("TEST ============")
+    print("a: " + str(tab))
     for a in tab:
+        print("b: " + a)
+        print("c: " + a)
         temp.append(a)
         i += 1
         if i == size:
+            print(temp)
             i = 0
             res.append(temp)
-            temp.flush()
+            temp = []
     if i > 0:
         res.append(temp)
 
@@ -32,8 +37,8 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
     res += __execute('echo 1 > /proc/sys/net/ipv4/ip_forward')
     res += __execute('echo 0 > /proc/sys/net/ipv6/conf/all/forwarding')
 
-    res += __execute('iptables -P INPUT DROP')
-    res += __execute('iptables -P FORWARD DROP')
+    res += __execute('iptables -P INPUT ACCEPT')
+    res += __execute('iptables -P FORWARD ACCEPT')
 
     #res += __execute('iptables -N INVALID')
 
@@ -43,13 +48,13 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
 
     #Local services
     if local_tcp_ports:
-        tab = __sub(','.join(local_tcp_ports).split(), 11)
+        tab = __sub(','.join(local_tcp_ports).split(','), 11)
         for a in tab:
             res += __execute('iptables -A INPUT -p tcp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
 
 
     if local_udp_ports:
-        tab = __sub(','.join(local_udp_ports).split(), 10)
+        tab = __sub(','.join(local_udp_ports).split(','), 10)
         for a in tab:
             res += __execute('iptables -A INPUT -p udp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
 
@@ -107,12 +112,12 @@ def __route(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_a
             else:
 
                 if forward_tcp_ports:
-                    tab = __sub(','.join(forward_tcp_ports).split(), 10)
+                    tab = __sub(','.join(forward_tcp_ports).split(','), 10)
                     for a in tab:
                         res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p tcp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 
                 if forward_udp_ports:
-                    tab = __sub(','.join(forward_udp_ports).split(), 10)
+                    tab = __sub(','.join(forward_udp_ports).split(','), 10)
                     for a in tab:
                         res += __execute('iptables -A FORWARD -i ' + lan_int + ' -o ' + wan_int + '  -p udp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 

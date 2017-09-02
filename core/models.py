@@ -23,6 +23,8 @@ class Client(models.Model):
     first_name = models.CharField(max_length=200, blank=False)
     last_name = models.CharField(max_length=200, blank=False)
     unrestricted = models.BooleanField(default=False, null=False, blank=False)
+    optmize = models.BooleanField(default=True, null=False, blank=False)
+
 
     @staticmethod
     def search(pattern):
