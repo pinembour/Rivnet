@@ -22,7 +22,7 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
 
     res += __execute('iptables -A INPUT -i lo -j ACCEPT')
 
-    local_tcp_ports = local_tcp_ports + ["22"] + ["8000"]
+    local_tcp_ports = ["22"] + ["8000"] + local_tcp_ports
 
     #Local services
     if local_tcp_ports:
