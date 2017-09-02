@@ -33,7 +33,7 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
         if tcp_rules > 0:
             for i in range(0, tcp_rules+1):
                 tcp_ports_final=[]
-                if i < tcp_rules or last == 0:
+                if i < tcp_rules:
                     for j in range(0, 9):
                         tcp_ports_final = tcp_ports_final + [temp[i*10 + j]]
                 else:
@@ -54,7 +54,7 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
         if udp_rules > 0:
             for i in range(0, udp_rules+1):
                 udp_ports_final=[]
-                if i < udp_rules or last == 0:
+                if i < udp_rules:
                     for j in range(0, 9):
                         udp_ports_final = udp_ports_final + [temp[i*10 + j]]
                 else:
@@ -147,7 +147,7 @@ def __route(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_a
                     if udp_rules > 0:
                         for i in range(0, udp_rules+1):
                             udp_ports_final=[]
-                            if i < udp_rules or last == 0:
+                            if i < udp_rules:
                                 res += ["a"]
                                 for j in range(0, 9):
                                     udp_ports_final = udp_ports_final + [temp[i*10 + j]]
