@@ -1,0 +1,4 @@
+{{ servers | safe }}<br />
+{% for line in log %}
+    {{ line | safe }}<br />
+{% endfor %}

@@ -71,7 +71,7 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
 
     # Routing Aldebaran
     res += __execute('iptables -A FORWARD -i ' + lan_admin_int + ' -j ACCEPT')
-    res += __execute('iptables -A POSTROUTING -t nat -o ' + wan_int + ' -j MASQUERADE')
+    #res += __execute('iptables -A POSTROUTING -t nat -s ' + lan_admin_int + ' -o ' + wan_int + ' -j MASQUERADE')
 
     # Routing Wan to Lan network
     res += __execute('iptables -A FORWARD -i ' + wan_int + ' -j ACCEPT')

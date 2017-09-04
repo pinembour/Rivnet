@@ -26,7 +26,7 @@ def __synchronize(ip, ip_alt):
 
 def __synchronize_all():
     from .models import Server
-    for server in Server.objects.filter(rivnet = True):
+    for server in Server.objects.filter(rivnet = True).filter(active = True):
         __synchronize(server.ip, server.alt)
 
 
