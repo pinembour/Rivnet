@@ -2,7 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
+from django.db.models import Sum
+
 from .models import Server
+from .models import Activation
 
 import subprocess
 
@@ -40,5 +43,14 @@ def sync(request):
         message = "HI ! <br /> ok."
     else:
         message = "This server is not Master"
+
+    return HttpResponse(message)
+
+@login_required(login_url='/admin/login/')
+def money(request):
+
+    total = Activation.objects.filter(client__unrestricted=False).aggregate(Sum('subscription'))['subscription__sum']
+
+    message = "Total = " + str(total)
 
     return HttpResponse(message)

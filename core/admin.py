@@ -118,3 +118,7 @@ admin.site.register(Mac, MacAdmin)
 admin.site.register(Activation, ActivationAdmin)
 admin.site.register(Forward, ForwardAdmin)
 admin.site.register(Input, InputAdmin)
+
+admin.site.site_header = 'Rivnet'
+admin.site.site_title = 'Rivnet |'
+admin.site.index_title = ''

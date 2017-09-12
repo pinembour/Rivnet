@@ -31,16 +31,16 @@ ALLOWED_HOSTS = ["10.20.0.130", "192.168.1.1"]
 # Application definition
 
 INSTALLED_APPS = [
+    'core.apps.CoreConfig',
+    'firewall.apps.FirewallConfig',
+    'optimizer.apps.OptimizerConfig',
+    'clients_config.apps.ClientsConfigConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'core.apps.CoreConfig',
-    'firewall.apps.FirewallConfig',
-    'optimizer.apps.OptimizerConfig',
-    'clients_config.apps.ClientsConfigConfig'
 ]
 
 MIDDLEWARE = [

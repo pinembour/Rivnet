@@ -8,5 +8,6 @@ from core import views
 
 urlpatterns = [
     url(r'^synchronize$', views.sync, name='synchronize'),
+    url(r'^money$', views.money, name='money'),
 ]
 
