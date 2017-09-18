@@ -37,8 +37,8 @@ def __init(wan_int, wan_ip, wan_r, lan_int, lan_ip, lan_r, lan_admin_int, lan_ad
     res += __execute('echo 1 > /proc/sys/net/ipv4/ip_forward')
     res += __execute('echo 0 > /proc/sys/net/ipv6/conf/all/forwarding')
 
-    res += __execute('iptables -P INPUT ACCEPT')
-    res += __execute('iptables -P FORWARD ACCEPT')
+    res += __execute('iptables -P INPUT DROP')
+    res += __execute('iptables -P FORWARD DROP')
 
     #res += __execute('iptables -N INVALID')
 

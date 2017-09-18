@@ -47,7 +47,7 @@ class ServerAdmin(admin.ModelAdmin):
     list_display = ('server_name', 'client', 'ip', 'restart_firewall', 'synchronize', 'active', 'rivnet')
     list_display_links = ('server_name', 'client', 'ip')
 
-    search_fields = ('server_name', 'client', 'ip')
+    search_fields = ('server_name', 'client__nickname', 'client__first_name', 'client__last_name', 'ip')
 
     def restart_firewall(self, obj):
         return mark_safe('<a target="_blank" href="http://' + obj.ip + ':8000/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
@@ -61,14 +61,14 @@ class MacAdmin(admin.ModelAdmin):
     list_display = ('client', 'address')
     list_display_links = ('client', 'address')
 
-    search_fields = ('client', 'address')
+    search_fields = ('client__nickname', 'client__first_name', 'client__last_name', 'address')
 
 class ActivationAdmin(admin.ModelAdmin):
     view_on_site = False
 
     #List parameters
     list_display = ('client', 'supplier', 'creation', 'duration_view', 'subscription_view', 'active', 'time_left_view')
-    list_display_links = ('client', 'supplier', 'duration_view', 'subscription_view')
+    list_display_links = ('client', 'duration_view', 'subscription_view')
 
     def duration_view(self, obj):
         return '%i month(s)' % obj.duration
@@ -82,10 +82,10 @@ class ActivationAdmin(admin.ModelAdmin):
         return '%i month(s) ' % (obj.time_left())
     time_left_view.short_description = 'Time left'
 
-    list_editable = ('active',)
+    list_editable = ('supplier', 'active')
     list_filter = ('supplier', 'active')
 
-    search_fields = ('client', 'supplier')
+    search_fields = ('client__nickname', 'client__first_name', 'client__last_name', 'supplier')
 
     #Edit parameters
     fields = ('client', 'supplier', 'duration', 'subscription', 'active')
