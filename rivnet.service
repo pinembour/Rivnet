@@ -5,7 +5,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=rivnet
+User=root
 Group=rivnet
 WorkingDirectory=/opt/rivnet
 ExecStart=/usr/bin/python3 /opt/rivnet/manage.py runserver 0.0.0.0:8000

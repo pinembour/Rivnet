@@ -85,7 +85,7 @@ class ActivationAdmin(admin.ModelAdmin):
     list_editable = ('supplier', 'active')
     list_filter = ('supplier', 'active')
 
-    search_fields = ('client__nickname', 'client__first_name', 'client__last_name', 'supplier')
+    search_fields = ('client__nickname', 'client__first_name', 'client__last_name', 'supplier__server_name')
 
     #Edit parameters
     fields = ('client', 'supplier', 'duration', 'subscription', 'active')
@@ -98,7 +98,7 @@ class ForwardAdmin(admin.ModelAdmin):
 
     list_filter = ('supplier', 'port')
 
-    search_fields = ('supplier', 'port')
+    search_fields = ('supplier__server_name', 'port__name')
 
 class InputAdmin(admin.ModelAdmin):
     view_on_site = False
@@ -108,7 +108,7 @@ class InputAdmin(admin.ModelAdmin):
 
     list_filter = ('supplier', 'port')
 
-    search_fields = ('supplier', 'port')
+    search_fields = ('supplier__server_name', 'port__name')
 
 
 admin.site.register(Port, PortAdmin)
