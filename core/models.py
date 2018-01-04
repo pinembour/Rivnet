@@ -3,6 +3,7 @@
 #
 
 from datetime import datetime
+from datetime import timedelta
 
 from django.db import models
 from django.db.models import Q
@@ -88,7 +89,10 @@ class Activation(models.Model):
     creation = models.DateField(auto_now_add=True)
 
     def time_left(self):
-        return self.creation.month + self.duration - datetime.now().date().month
+        dur = timedelta(days=30*self.duration)
+        end = self.creation + dur
+        diff =  end - datetime.now().date()
+        return (diff).days / 30
 
     def __str__(self):
         return  str(self.supplier) + ": " + str(self.client)
