@@ -50,10 +50,10 @@ class ServerAdmin(admin.ModelAdmin):
     search_fields = ('server_name', 'client__nickname', 'client__first_name', 'client__last_name', 'ip')
 
     def restart_firewall(self, obj):
-        return mark_safe('<a target="_blank" href="http://' + obj.ip + ':8000/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
+        return mark_safe('<a target="_blank" href="http://' + obj.ip + '/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
 
     def synchronize(self, obj):
-        return mark_safe('<a target="_blank" href="http://' + obj.ip + ':8000/core/synchronize"><input type="button" value="Synchronize"></input></a>')
+        return mark_safe('<a target="_blank" href="http://' + obj.ip + '/core/synchronize"><input type="button" value="Synchronize"></input></a>')
 
 class MacAdmin(admin.ModelAdmin):
     view_on_site = False
