@@ -1,6 +1,6 @@
 ##### Firewall settings #####
 
-server_name = 'Naboo'
+server_name = 'Glargh'
 
 wan_int = 'enp4s0'
 wan_ip = '192.168.1.1'

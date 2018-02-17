@@ -8,5 +8,6 @@ from optimizer import views
 
 urlpatterns = [
     url(r'^optimize$', views.optimize, name='optimize'),
+    url(r'^status$', views.status, name='status'),
 ]
 

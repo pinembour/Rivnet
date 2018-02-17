@@ -10,6 +10,7 @@ from django.db.models import Q
 
 from core.models import Port
 from core.models import Client
+from core.models import Period 
 from core.models import Server
 from core.models import Mac
 from core.models import Activation
@@ -19,7 +20,9 @@ from core.models import Input
 from . import firewall_script
 from . import settings
 
-def __context():
+def __getContext():
+
+    print("extracting data")
 
     res = {}
 
@@ -40,6 +43,7 @@ def __context():
     try:
         supplier = Server.objects.get(server_name = settings.server_name)
     except Server.DoesNotExist:
+        print("Settings are misconfigured")
         return HttpResponse("Settings are misconfigured")
 
     res["local_tcp_ports"] = []
@@ -48,6 +52,7 @@ def __context():
     for input in supplier.inputs.all():
         port = input.port
 
+        print(port)
         if port.tcp:
             res["local_tcp_ports"].append(port.value)
         if port.udp:
@@ -56,7 +61,7 @@ def __context():
     res["forward_tcp_ports"] = []
     res["forward_udp_ports"] = []
 
-    for forward in supplier.forwards.all():
+    for forward in Forward.objects.all():
         port = forward.port
 
         if port.tcp:
@@ -64,23 +69,24 @@ def __context():
         if port.udp:
             res["forward_udp_ports"].append(port.value)
 
-    cotisations = Activation.objects.all()
+    activePeriods = Period.objects.filter(begin__lte = datetime.now(), end__gte = datetime.now())
+    cotisations = Activation.objects.filter(period__in=activePeriods).order_by("-creation")
 
     res["clients"] = []
     for cotis in cotisations:
         client = cotis.client
+        macs = []
 
-        if int(cotis.time_left()) >= 0:
-            macs = []
+        for mac in client.macs.all():
+            macs.append(mac.address)
 
-            for mac in client.macs.all():
-                macs.append(mac.address)
-
-            res["clients"].append({
-                "name": str(client),
-                "macs": macs,
-                "admin": client.unrestricted
-            })
+        res["clients"].append({
+            "name": str(client),
+            "macs": macs,
+            "admin": client.unrestricted
+        })
+    print("extracting data ok")
+    print(res)
 
     return res
 
@@ -94,7 +100,7 @@ def index(request):
 def start(request):
 
     settings = __context()
-    context = firewall_script.start(settings["wan_int"], settings["wan_ip"], settings["wan_r"], settings["lan_int"], settings["lan_ip"], settings["lan_r"], settings["lan_admin_int"], settings["lan_admin_ip"], settings["lan_admin_r"], settings["local_tcp_ports"], settings["local_udp_ports"], settings["forward_tcp_ports"], settings["forward_udp_ports"], settings["clients"])
+    context = firewall_script.start(settings)
     return render(request, 'firewall/start.html', context)
 
 @login_required(login_url='/admin/login/')
@@ -106,6 +112,6 @@ def stop(request):
 @login_required(login_url='/admin/login/')
 def restart(request):
 
-    settings = __context()
-    context = firewall_script.restart(settings["wan_int"], settings["wan_ip"], settings["wan_r"], settings["lan_int"], settings["lan_ip"], settings["lan_r"], settings["lan_admin_int"], settings["lan_admin_ip"], settings["lan_admin_r"], settings["local_tcp_ports"], settings["local_udp_ports"], settings["forward_tcp_ports"], settings["forward_udp_ports"], settings["clients"])
+    settings = __getContext()
+    context = firewall_script.restart(settings)
     return render(request, 'firewall/restart.html', context)
