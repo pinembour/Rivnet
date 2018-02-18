@@ -55,12 +55,22 @@ class Client(models.Model):
         return identifier
 
 class Server(models.Model):
+    master = models.BooleanField(default=False, null=False)
     ip = models.CharField(max_length=32, unique=True, blank=False)
     alt = models.CharField(max_length=32, blank=True, default="")
     server_name = models.CharField(max_length=50, unique=True, blank=False)
     client = models.ForeignKey(Client, models.CASCADE, null=False)
     rivnet = models.BooleanField(default=True, null=False)
     active = models.BooleanField(default=True, null=False)
+    wan_int = models.CharField(max_length=32, null=False)
+    wan_ip = models.CharField(max_length=32, null=False)
+    wan_net = models.CharField(max_length=32, null=False)
+    lan_int = models.CharField(max_length=32, null=False)
+    lan_ip = models.CharField(max_length=32, null=False)
+    lan_net = models.CharField(max_length=32, null=False)
+    lan_admin_int = models.CharField(max_length=32, null=False)
+    lan_admin_ip = models.CharField(max_length=32, null=False)
+    lan_admin_net = models.CharField(max_length=32, null=False)
 
     def getTotalActivations(self):
         return len(self.activation_set.all())

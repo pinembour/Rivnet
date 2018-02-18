@@ -21,30 +21,32 @@ def __execute(command, shell=False):
 def __command(ip):
     return "scp -i /home/rivnet/.ssh/id_rsa /opt/rivnet/db.sqlite3 rivnet@" + ip + ":/opt/rivnet/db.sqlite3"
 
-def __synchronize(ip, ip_alt):
+def __synchronize(server):
     try:
-        __execute(__command(ip))
-    except Exception:
-        __execute(__command(ip_alt))
+        __execute(__command(server.ip))
+        return server.server_name + ": Synchronized"
+    except Exception as e:
+        return server.server_name + ": Failed: " + str(e)
+
 
 def __synchronize_all():
     from .models import Server
-    for server in Server.objects.filter(rivnet = True).filter(active = True):
-        __synchronize(server.ip, server.alt)
-
+    res = []
+    for server in Server.objects.filter(rivnet = True, active = True):
+        res += [__synchronize(server)]
+    return res
 
 @login_required(login_url='/admin/login/')
 def sync(request):
-    message = ""
+    context = {}
 
     if(settings.master):
         print("Synchronization....")
-        __synchronize_all()
-        message = "HI ! <br /> ok."
+        context['log'] = __synchronize_all()
     else:
-        message = "This server is not Master"
+        context['log'] = "This server is not Master"
 
-    return HttpResponse(message)
+    return render(request, 'core/synchronize.html', context)
 
 @login_required(login_url='/admin/login/')
 def money(request):

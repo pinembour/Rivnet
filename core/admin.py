@@ -54,7 +54,10 @@ class ServerAdmin(admin.ModelAdmin):
         return mark_safe('<a target="_blank" href="https://' + obj.alt + '/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
 
     def synchronize(self, obj):
-        return mark_safe('<a target="_blank" href="https://' + obj.alt + '/core/synchronize"><input type="button" value="Synchronize"></input></a>')
+        if obj.master:
+            return mark_safe('<a target="_blank" href="https://' + obj.alt + '/core/synchronize"><input type="button" value="Synchronize"></input></a>')
+        else:
+            return ""
 
 class MacAdmin(admin.ModelAdmin):
     view_on_site = False

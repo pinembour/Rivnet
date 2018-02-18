@@ -25,26 +25,27 @@ def __getContext():
     print("extracting data")
 
     res = {}
-
-    res["wan_int"] = settings.wan_int
-    res["wan_ip"] = settings.wan_ip
-    res["wan_r"] = settings.wan_r
-
-    res["lan_int"] = settings.lan_int
-    res["lan_ip"] = settings.lan_ip
-    res["lan_r"] = settings.lan_r
-
-    res["lan_admin_int"] = settings.lan_admin_int
-    res["lan_admin_ip"] = settings.lan_admin_ip
-    res["lan_admin_r"] = settings.lan_admin_r
-
-
+    
     supplier = None
     try:
         supplier = Server.objects.get(server_name = settings.server_name)
     except Server.DoesNotExist:
         print("Settings are misconfigured")
         return HttpResponse("Settings are misconfigured")
+
+    res["wan_int"] = server.wan_int
+    res["wan_ip"] = server.wan_ip
+    res["wan_net"] = server.wan_net
+
+    res["lan_int"] = server.lan_int
+    res["lan_ip"] = server.lan_ip
+    res["lan_net"] = server.lan_net
+
+    res["lan_admin_int"] = server.lan_admin_int
+    res["lan_admin_ip"] = server.lan_admin_ip
+    res["lan_admin_net"] = server.lan_admin_net
+
+
 
     res["local_tcp_ports"] = []
     res["local_udp_ports"] = []
