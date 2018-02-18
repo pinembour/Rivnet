@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from core.models import Mac
 from core.models import Activation
+from core.models import Period
 from core.models import Server
 import datetime
 
