@@ -18,7 +18,7 @@ from core.models import Forward
 from core.models import Input
 
 from . import firewall_script
-from . import settings
+from core import settings
 
 def __getContext():
 

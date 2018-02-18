@@ -9,7 +9,7 @@ from .models import Activation
 
 import subprocess
 
-from . import settings
+from core import settings
 
 def __execute(command, shell=False):
     command_split = str(command).split()
@@ -40,7 +40,14 @@ def __synchronize_all():
 def sync(request):
     context = {}
 
-    if(settings.master):
+    server = None
+    try:
+        server = Server.objects.get(server_name = settings.server_name)
+    except Server.DoesNotExist:
+        print("Settings are misconfigured")
+        return HttpResponse("Settings are misconfigured")
+
+    if(server.master):
         print("Synchronization....")
         context['log'] = __synchronize_all()
     else:
