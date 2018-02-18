@@ -26,9 +26,9 @@ def __getContext():
 
     res = {}
     
-    supplier = None
+    server = None
     try:
-        supplier = Server.objects.get(server_name = settings.server_name)
+        server = Server.objects.get(server_name = settings.server_name)
     except Server.DoesNotExist:
         print("Settings are misconfigured")
         return HttpResponse("Settings are misconfigured")
@@ -50,7 +50,7 @@ def __getContext():
     res["local_tcp_ports"] = []
     res["local_udp_ports"] = []
 
-    for input in supplier.inputs.all():
+    for input in server.inputs.all():
         port = input.port
 
         print(port)
