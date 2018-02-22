@@ -115,7 +115,8 @@ def start(kwargs):
                         res += __execute('iptables -A FORWARD -i ' + kwargs['lan_int'] + ' -o ' + kwargs['wan_int'] + '  -p udp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 
     res += ["\n"]
-    res += __execute('iptables -t nat -A POSTROUTING -j SNAT -o ' + kwargs['wan_int'] + ' --to-source ' + kwargs['wan_ip'])
+    #res += __execute('iptables -t nat -A POSTROUTING -j SNAT -o ' + kwargs['wan_int'] + ' --to-source ' + kwargs['wan_ip'])
+    res += __execute('iptables -t nat -A POSTROUTING -j MASQUERADE')
 
     res += __execute('bash firewall/save.sh')
 
