@@ -41,6 +41,7 @@ def start(kwargs):
     res += __execute('iptables -A INPUT -i lo -j ACCEPT')
 
     res += __execute('iptables -A INPUT -p tcp -m multiport --dports 22 -m state --state NEW -j ACCEPT')
+    res += __execute('iptables -A INPUT -i wifi_bridge -p udp -m multiport --dports 67,68 -m state --state NEW -j ACCEPT')
 
     #Local services
     if len(kwargs['local_tcp_ports']):
