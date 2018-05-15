@@ -6,7 +6,7 @@ from datetime import datetime
 from datetime import timedelta
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.dispatch import receiver
 import unicodedata
 
@@ -23,6 +23,9 @@ class Period(models.Model):
     name = models.CharField(max_length=40, null=False, blank=False)
     begin = models.DateField(null=False, blank=False)
     end = models.DateField(null=False, blank=False)
+
+    def sum(self):
+        return Activation.objects.filter(period=self).aggregate(total=Sum("subscription"))['total']
 
     def __str__(self):
         return (self.name)

@@ -89,8 +89,12 @@ class ActivationAdmin(admin.ModelAdmin):
 class PeriodAdmin(admin.ModelAdmin):
     view_on_site = False
 
-    list_display = ('name', 'begin', 'end')
+    list_display = ('name', 'begin', 'end', 'sum_view')
     list_display_links = ('name', 'begin', 'end')
+
+    def sum_view(self, obj):
+        return '%i €' % obj.sum()
+    sum_view.short_description = "Money"
 
     search_fields = ('name', 'begin', 'end')
 
