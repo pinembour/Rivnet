@@ -41,7 +41,7 @@ def start(kwargs):
     res += __execute('iptables -A INPUT -i lo -j ACCEPT')
 
     res += __execute('iptables -A INPUT -p tcp -m multiport --dports 22 -m state --state NEW -j ACCEPT')
-    res += __execute('iptables -A INPUT -i wifi_bridge -p udp -m multiport --dports 67,68 -m state --state NEW -j ACCEPT')
+    res += __execute('iptables -A INPUT -i wlx00c0ca84a3dd -p udp -m multiport --dports 67,68 -m state --state NEW -j ACCEPT')
 
     #Local services
     if len(kwargs['local_tcp_ports']):
@@ -74,7 +74,7 @@ def start(kwargs):
     res += __execute('iptables -A POSTROUTING -t nat -o ' + kwargs['lan_int'] + ' -j MASQUERADE')
 
     # Routing Wifi to Wan and Lan
-    res += __execute('iptables -A FORWARD -i wifi_bridge -j ACCEPT')
+    res += __execute('iptables -A FORWARD -i wlx00c0ca84a3dd -j ACCEPT')
 
     # Port forwarding rivlink's irc
     res += __execute('iptables -A PREROUTING -t nat -i ' + kwargs['wan_int'] + ' -p tcp --dport 6667 -j DNAT --to 10.20.0.3:6667')

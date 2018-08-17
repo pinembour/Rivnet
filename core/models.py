@@ -25,7 +25,12 @@ class Period(models.Model):
     end = models.DateField(null=False, blank=False)
 
     def sum(self):
-        return Activation.objects.filter(period=self).aggregate(total=Sum("subscription"))['total']
+        total = Activation.objects.filter(period=self).aggregate(total=Sum("subscription"))['total']
+        if total == None:
+            return 0
+        else:
+            return total
+
 
     def __str__(self):
         return (self.name)
@@ -101,7 +106,7 @@ class Activation(models.Model):
     active = models.BooleanField(default=True, null=False)
 
     client = models.ForeignKey(Client, models.CASCADE, null=False, unique=False)
-    supplier = models.ForeignKey(Server, default=0, null=False)
+    supplier = models.ForeignKey(Server, models.CASCADE, default=0, null=False)
 
     period = models.ForeignKey(Period, models.CASCADE, null=False)
     creation = models.DateField(auto_now_add=True)
@@ -110,14 +115,14 @@ class Activation(models.Model):
         return  str(self.period) + " - " + str(self.supplier) + ": " + str(self.client)
 
 class Forward(models.Model):
-    port = models.ForeignKey(Port, null=False)
+    port = models.ForeignKey(Port, models.CASCADE, null=False)
 
     def __str__(self):
         return (str(self.port))
 
 class Input(models.Model):
-    port = models.ForeignKey(Port, null=False)
-    supplier = models.ForeignKey(Server, null=False, related_name="inputs")
+    port = models.ForeignKey(Port, models.CASCADE, null=False)
+    supplier = models.ForeignKey(Server, models.CASCADE, null=False, related_name="inputs")
 
     def __str__(self):
         return (str(self.supplier) + ": " + str(self.port))

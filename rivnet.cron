@@ -1,1 +1,0 @@
-@reboot root /sbin/iptables-restore /etc/iptables/rules.iptables
