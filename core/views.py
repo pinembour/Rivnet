@@ -18,22 +18,22 @@ def __execute(command, shell=False):
     else:
         return [command + ": OK: " + str(subprocess.check_output(command_split))]
 
-def __command(ip):
-    return "scp -i /home/rivnet/.ssh/id_rsa /opt/rivnet/db.sqlite3 rivnet@" + ip + ":/opt/rivnet/db.sqlite3"
+def __command(ip, directory_src, directory_dst):
+    return "scp -i /home/rivnet/.ssh/id_rsa " + directory_src + "/db.sqlite3 rivnet@" + ip + ":" + directory_dst + "/db.sqlite3"
 
-def __synchronize(server):
+def __synchronize(server, master):
     try:
-        __execute(__command(server.ip))
+        __execute(__command(server.ip, master.install_directory, server.install_directory))
         return server.server_name + ": Synchronized"
     except Exception as e:
         return server.server_name + ": Failed: " + str(e)
 
 
-def __synchronize_all():
+def __synchronize_all(master):
     from .models import Server
     res = []
-    for server in Server.objects.filter(rivnet = True):
-        res += [__synchronize(server)]
+    for server in Server.objects.filter(rivnet = True, server_name = settings.server_name):
+        res += [__synchronize(server, master)]
     return res
 
 @login_required(login_url='/admin/login/')
@@ -49,7 +49,7 @@ def sync(request):
 
     if(server.master):
         print("Synchronization....")
-        context['log'] = __synchronize_all()
+        context['log'] = __synchronize_all(server)
     else:
         context['log'] = "This server is not Master"
 

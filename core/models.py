@@ -79,6 +79,7 @@ class Server(models.Model):
     lan_admin_int = models.CharField(max_length=32, null=False)
     lan_admin_ip = models.CharField(max_length=32, null=False)
     lan_admin_net = models.CharField(max_length=32, null=False)
+    install_directory = models.CharField(max_length=255, null=False)
 
     def getTotalActivations(self):
         return len(self.activation_set.all())
