@@ -32,7 +32,7 @@ def __synchronize(server, master):
 def __synchronize_all(master):
     from .models import Server
     res = []
-    for server in Server.objects.filter(rivnet = True, server_name = settings.server_name):
+    for server in Server.objects.filter(rivnet = True, server_name != settings.server_name):
         res += [__synchronize(server, master)]
     return res
 
