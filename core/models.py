@@ -39,6 +39,7 @@ class Client(models.Model):
     nickname = models.CharField(max_length=200, blank=True)
     first_name = models.CharField(max_length=200, blank=False)
     last_name = models.CharField(max_length=200, blank=False)
+    email_address = models.EmailField(null=True, blank=True)
     unrestricted = models.BooleanField(default=False, null=False, blank=False)
     optimize = models.BooleanField(default=True, null=False, blank=False)
 

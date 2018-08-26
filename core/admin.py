@@ -33,12 +33,12 @@ class PortAdmin(admin.ModelAdmin):
 class ClientAdmin(admin.ModelAdmin):
     view_on_site = False
 
-    list_display = ('nickname', 'first_name', 'last_name', 'unrestricted')
-    list_display_links = ('nickname', 'first_name', 'last_name', 'unrestricted')
+    list_display = ('nickname', 'first_name', 'last_name', 'email_address', 'unrestricted')
+    list_display_links = ('nickname', 'first_name', 'last_name', 'email_address', 'unrestricted')
 
     list_filter = ('unrestricted',)
 
-    search_fields = ('nickname', 'first_name', 'last_name')
+    search_fields = ('nickname', 'first_name', 'last_name', 'email_address')
 
     inlines = [MacAdminInline,]
 
