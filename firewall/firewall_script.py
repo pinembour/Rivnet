@@ -38,55 +38,55 @@ def start(kwargs):
     res += __execute('iptables -P INPUT DROP')
     res += __execute('iptables -P FORWARD DROP')
 
-    res += __execute('iptables -A INPUT -i lo -j ACCEPT')
+    res += __execute('iptables -A INPUT-RIVNET -i lo -j ACCEPT')
 
-    res += __execute('iptables -A INPUT -p tcp -m multiport --dports 22 -m state --state NEW -j ACCEPT')
-    res += __execute('iptables -A INPUT -i wlx00c0ca84a3dd -p udp -m multiport --dports 67,68 -m state --state NEW -j ACCEPT')
+    res += __execute('iptables -A INPUT-RIVNET -p tcp -m multiport --dports 22 -m state --state NEW -j ACCEPT')
+    res += __execute('iptables -A INPUT-RIVNET -i wlx00c0ca84a3dd -p udp -m multiport --dports 67,68 -m state --state NEW -j ACCEPT')
 
     #Local services
     if len(kwargs['local_tcp_ports']):
         tab = __sub(','.join(kwargs['local_tcp_ports']).split(','), 11)
         for a in tab:
-            res += __execute('iptables -A INPUT -p tcp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
+            res += __execute('iptables -A INPUT-RIVNET -p tcp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
 
 
     if len(kwargs['local_udp_ports']):
         tab = __sub(','.join(kwargs['local_udp_ports']).split(','), 10)
         for a in tab:
-            res += __execute('iptables -A INPUT -p udp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
+            res += __execute('iptables -A INPUT-RIVNET -p udp -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -j ACCEPT')
 
     # ICMP : ping request
-    res += __execute('iptables -A INPUT -p icmp -j ACCEPT')
+    res += __execute('iptables -A INPUT-RIVNET -p icmp -j ACCEPT')
 
     # Don't touch to the established connections !
     # 'state' module, obsolete but still used
-    res += __execute('iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT')
-    res += __execute('iptables -A FORWARD -m state --state ESTABLISHED,RELATED -j ACCEPT')
+    res += __execute('iptables -A INPUT-RIVNET -m state --state ESTABLISHED,RELATED -j ACCEPT')
+    res += __execute('iptables -A FORWARD-RIVNET -m state --state ESTABLISHED,RELATED -j ACCEPT')
     # new module. 'conntrack' instead of 'state'
-    res += __execute('iptables -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT')
+    res += __execute('iptables -A INPUT-RIVNET -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT')
     res += __execute('iptables -A OUTPUT -m conntrack --ctstate NEW,RELATED,ESTABLISHED -j ACCEPT')
 
     # Routing Aldebaran
-    res += __execute('iptables -A FORWARD -i ' + kwargs['lan_admin_int'] + ' -j ACCEPT')
+    res += __execute('iptables -A FORWARD-RIVNET -i ' + kwargs['lan_admin_int'] + ' -j ACCEPT')
 
     # Routing Wan to Lan network
-    res += __execute('iptables -A FORWARD -i ' + kwargs['wan_int'] + ' -j ACCEPT')
-    res += __execute('iptables -A POSTROUTING -t nat -o ' + kwargs['lan_int'] + ' -j MASQUERADE')
+    res += __execute('iptables -A FORWARD-RIVNET -i ' + kwargs['wan_int'] + ' -j ACCEPT')
+    res += __execute('iptables -A POSTROUTING-RIVNET -t nat -o ' + kwargs['lan_int'] + ' -j MASQUERADE')
 
     # Routing Wifi to Wan and Lan
-    res += __execute('iptables -A FORWARD -i wlx00c0ca84a3dd -j ACCEPT')
+    res += __execute('iptables -A FORWARD-RIVNET -i wlx00c0ca84a3dd -j ACCEPT')
 
     # Port forwarding rivlink's irc
-    res += __execute('iptables -A PREROUTING -t nat -i ' + kwargs['wan_int'] + ' -p tcp --dport 6667 -j DNAT --to 10.20.0.3:6667')
-    res += __execute('iptables -A FORWARD -p tcp --dport 6667 -j ACCEPT')
-    res += __execute('iptables -A PREROUTING -t nat -i ' + kwargs['wan_int'] + ' -p tcp --dport 6668 -j DNAT --to 10.20.0.3:6668')
-    res += __execute('iptables -A FORWARD -p tcp --dport 6668 -j ACCEPT')
+    res += __execute('iptables -A PREROUTING-RIVNET -t nat -i ' + kwargs['wan_int'] + ' -p tcp --dport 6667 -j DNAT --to 10.20.0.3:6667')
+    res += __execute('iptables -A FORWARD-RIVNET -p tcp --dport 6667 -j ACCEPT')
+    res += __execute('iptables -A PREROUTING-RIVNET -t nat -i ' + kwargs['wan_int'] + ' -p tcp --dport 6668 -j DNAT --to 10.20.0.3:6668')
+    res += __execute('iptables -A FORWARD-RIVNET -p tcp --dport 6668 -j ACCEPT')
 
     # VPN
-    res += __execute('iptables -A INPUT -s 10.8.0.0/24 -j ACCEPT')
-    res += __execute('iptables -A FORWARD -p tcp -s 10.8.0.0/24 -j ACCEPT')
-    res += __execute('iptables -A POSTROUTING -t nat -s 10.8.0.0/24 -j MASQUERADE')
-    res += __execute('iptables -A POSTROUTING -t nat -s 10.8.0.0/24 -j MASQUERADE')
+    res += __execute('iptables -A INPUT-RIVNET -s 10.8.0.0/24 -j ACCEPT')
+    res += __execute('iptables -A FORWARD-RIVNET -p tcp -s 10.8.0.0/24 -j ACCEPT')
+    res += __execute('iptables -A POSTROUTING-RIVNET -t nat -s 10.8.0.0/24 -j MASQUERADE')
+    res += __execute('iptables -A POSTROUTING-RIVNET -t nat -s 10.8.0.0/24 -j MASQUERADE')
     res += ["\n"]
     
     res += ["Clients: "]
@@ -97,27 +97,27 @@ def start(kwargs):
 
             name = client["name"]
 
-            res += __execute('iptables -A FORWARD -i ' + kwargs['lan_int'] + ' -p icmp -m mac --mac-source ' + mac + ' -m comment --comment "' + name + '" -j ACCEPT')
+            res += __execute('iptables -A FORWARD-RIVNET -i ' + kwargs['lan_int'] + ' -p icmp -m mac --mac-source ' + mac + ' -m comment --comment "' + name + '" -j ACCEPT')
 
             if client["admin"]:
 
-                res += __execute('iptables -A FORWARD -i ' + kwargs['lan_int'] + ' -m mac --mac-source ' + mac + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
+                res += __execute('iptables -A FORWARD-RIVNET -i ' + kwargs['lan_int'] + ' -m mac --mac-source ' + mac + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 
             else:
 
                 if len(kwargs['forward_tcp_ports']):
                     tab = __sub(','.join(kwargs['forward_tcp_ports']).split(','), 10)
                     for a in tab:
-                        res += __execute('iptables -A FORWARD -i ' + kwargs['lan_int'] + ' -o ' + kwargs['wan_int'] + '  -p tcp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
+                        res += __execute('iptables -A FORWARD-RIVNET -i ' + kwargs['lan_int'] + ' -o ' + kwargs['wan_int'] + '  -p tcp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 
                 if len(kwargs['forward_udp_ports']):
                     tab = __sub(','.join(kwargs['forward_udp_ports']).split(','), 10)
                     for a in tab:
-                        res += __execute('iptables -A FORWARD -i ' + kwargs['lan_int'] + ' -o ' + kwargs['wan_int'] + '  -p udp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
+                        res += __execute('iptables -A FORWARD-RIVNET -i ' + kwargs['lan_int'] + ' -o ' + kwargs['wan_int'] + '  -p udp -m mac --mac-source ' + mac + ' -m multiport --dports ' + ','.join(a) + ' -m state --state NEW -m comment --comment "' + name + '" -j ACCEPT')
 
     res += ["\n"]
-    #res += __execute('iptables -t nat -A POSTROUTING -j SNAT -o ' + kwargs['wan_int'] + ' --to-source ' + kwargs['wan_ip'])
-    res += __execute('iptables -t nat -A POSTROUTING -j MASQUERADE')
+    res += __execute('iptables -t nat -A POSTROUTING-RIVNET -j SNAT -o ' + kwargs['wan_int'] + ' --to-source ' + kwargs['wan_ip'])
+    #res += __execute('iptables -t nat -A POSTROUTING-RIVNET -j MASQUERADE')
 
     res += __execute('bash firewall/save.sh')
 
@@ -142,10 +142,11 @@ def stop():
     res += __execute('iptables -t nat -P OUTPUT ACCEPT')
 
     # Flush
-    res += __execute('iptables  -F INPUT')
-    res += __execute('iptables  -F OUTPUT')
-    res += __execute('iptables  -F FORWARD')
-    res += __execute('iptables  -t nat -F')
+    res += __execute('iptables  -F INPUT-RIVNET')
+    res += __execute('iptables  -F OUTPUT-RIVNET')
+    res += __execute('iptables  -F FORWARD-RIVNET')
+    res += __execute('iptables  -t nat -F PREROUTING-RIVNET')
+    res += __execute('iptables  -t nat -F POSTROUTING-RIVNET')
 
     return { 'stop_log': res }
 
