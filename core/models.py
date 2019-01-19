@@ -92,6 +92,7 @@ class Mac(models.Model):
     address = models.CharField(max_length=32, unique=True, blank=False)
 
     client = models.ForeignKey(Client, models.CASCADE, null=False, related_name="macs");
+    name = models.CharField(max_length=40, blank=False)
 
     def __str__(self):
         return str(self.client) + " : " + self.address
