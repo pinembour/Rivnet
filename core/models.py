@@ -101,6 +101,7 @@ class Mac(models.Model):
 
         self.address = self.address.replace("-", ":")
         self.address = self.address[:17]
+        self.address = self.address.upper()
 
         super(Mac, self).save(*args, **kwargs)
 
