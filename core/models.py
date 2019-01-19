@@ -113,6 +113,7 @@ class Activation(models.Model):
 
     period = models.ForeignKey(Period, models.CASCADE, null=False)
     creation = models.DateField(auto_now_add=True)
+    commentary = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return  str(self.period) + " - " + str(self.supplier) + ": " + str(self.client)
