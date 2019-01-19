@@ -8,7 +8,7 @@
 !./manager.py
 
 !./rivnet
-!./core
+!./core/**
 !./firewall
 !./clients_config
 !./optimizer
