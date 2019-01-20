@@ -71,7 +71,7 @@ class ActivationAdmin(admin.ModelAdmin):
     view_on_site = False
 
     #List parameters
-    list_display = ('period', 'client', 'supplier', 'creation', 'subscription_view', 'active')
+    list_display = ('period', 'client', 'supplier', 'creation', 'subscription_view', 'active', 'commentary')
     list_display_links = ('period', 'client', 'subscription_view')
 
     def subscription_view(self, obj):
@@ -84,7 +84,7 @@ class ActivationAdmin(admin.ModelAdmin):
     search_fields = ('client__nickname', 'client__first_name', 'client__last_name', 'supplier__server_name')
 
     #Edit parameters
-    fields = ('period', 'client', 'supplier', 'subscription', 'active')
+    fields = ('period', 'client', 'supplier', 'subscription', 'active', 'commentary')
 
 class PeriodAdmin(admin.ModelAdmin):
     view_on_site = False

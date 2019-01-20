@@ -92,6 +92,7 @@ class Mac(models.Model):
     address = models.CharField(max_length=32, unique=True, blank=False)
 
     client = models.ForeignKey(Client, models.CASCADE, null=False, related_name="macs");
+    name = models.CharField(max_length=40, null=True, blank=True)
 
     def __str__(self):
         return str(self.client) + " : " + self.address
@@ -100,6 +101,7 @@ class Mac(models.Model):
 
         self.address = self.address.replace("-", ":")
         self.address = self.address[:17]
+        self.address = self.address.upper()
 
         super(Mac, self).save(*args, **kwargs)
 
@@ -112,6 +114,7 @@ class Activation(models.Model):
 
     period = models.ForeignKey(Period, models.CASCADE, null=False)
     creation = models.DateField(auto_now_add=True)
+    commentary = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return  str(self.period) + " - " + str(self.supplier) + ": " + str(self.client)

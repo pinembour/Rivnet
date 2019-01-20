@@ -25,7 +25,7 @@ SECRET_KEY = '#$d3v2pso=odr4v+(22+m3zkq-ae9@xdp52rea4(32v*$hdq4('
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["10.20.0.130", "192.168.1.1", "admin.glargh.fr"]
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 
 # Application definition

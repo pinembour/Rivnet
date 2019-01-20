@@ -24,10 +24,16 @@ def __command(ip, directory_src, directory_dst):
 def __synchronize(server, master):
     try:
         __execute(__command(server.ip, master.install_directory, server.install_directory))
-        return server.server_name + ": Synchronized"
-    except Exception as e:
-        return server.server_name + ": Failed: " + str(e)
-
+        return server.server_name + ": Synchronized via Lan"
+    except Exception as e1:
+        try:
+            if(server.alt):
+                __execute(__command(server.alt, master.install_directory, server.install_directory))
+                return server.server_name + ": Failed synchronization via Lan : " + str(e1) + "Synchronized via Internet"
+            else:
+                return server.server_name + ": Failed synchronization via Lan : " + str(e1)
+        except Exception as e2:
+            return server.server_name + ": Failed synchronization via Lan : " + str(e1) + "Failed synchronization via Internet : " + str(e2)
 
 def __synchronize_all(master):
     from .models import Server
