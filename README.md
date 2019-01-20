@@ -16,3 +16,11 @@ pip install django
 
 You have to edit core/settings.py and Changing "Server" by your server name.
 It must match the name you will gave to the server instance you will then create on the manager.
+
+
+##Run
+
+```bash
+source env/bin/activate
+./manage.py runserver 0.0.0.0:8000
+```
