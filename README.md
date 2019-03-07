@@ -1,10 +1,10 @@
 # Rivnet
-Rivnet is a multiple gateway proxy system to use in parrallel with https://github.com/gnikwo/Rivnet_client
+Rivnet is a multiple gateway proxy system to use in parrallel with https://github.com/pinembour/Rivnet_client
 
-##Installation
+## Installation
 
 ```bash
-git clone https://github.com/gnikwo/Rivnet
+git clone https://github.com/pinembour/Rivnet
 cd Rivnet
 virtualenv --python=python3 env
 source env/bin/activate
@@ -14,11 +14,24 @@ pip install django
 ./manage.py createsuperuser
 ```
 
-You have to edit core/settings.py and Changing "Server" by your server name.
-It must match the name you will gave to the server instance you will then create on the manager.
+## Configuration
+
+First edit ```core/settings.py``` and input your server name.
+It must match the name of the server instance you will create on the manager.
+
+```python
+#Input your server name here, it has to match the name of the server instance you will create on the manager
+server_name=""
+```
+
+Then edit ```rivnet/settings.py```
+
++ Input your own secret key
++ Set debug to false
++ Add all the allowed hosts you need, for example ```127.0.0.0.1``` or ```domain.local```
 
 
-##Run
+## Run
 
 ```bash
 source env/bin/activate
