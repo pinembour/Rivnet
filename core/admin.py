@@ -51,11 +51,17 @@ class ServerAdmin(admin.ModelAdmin):
     search_fields = ('server_name', 'client__nickname', 'client__first_name', 'client__last_name', 'ip')
 
     def restart_firewall(self, obj):
-        return mark_safe('<a target="_blank" href="https://' + obj.alt + '/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
-
+        if obj.alt:
+            return mark_safe('<a target="_blank" href="https://' + obj.alt + '/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
+        else : 
+            return  mark_safe('<a target="_blank" href="http://' + obj.ip + '/firewall/restart"><input type="button" value="Restart firewall"></input></a>')
     def synchronize(self, obj):
         if obj.master:
-            return mark_safe('<a target="_blank" href="https://' + obj.alt + '/core/synchronize"><input type="button" value="Synchronize"></input></a>')
+            if obj.alt:
+                return mark_safe('<a target="_blank" href="https://' + obj.alt + '/core/synchronize"><input type="button" value="Synchronize"></input></a>')
+            else:
+                return mark_safe('<a target="_blank" href="http://' + obj.ip + '/core/synchronize"><input type="button" value="Synchronize"></input></a>')
+
         else:
             return ""
 
