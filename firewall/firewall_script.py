@@ -76,19 +76,6 @@ def start(kwargs):
     # Routing Wifi to Wan and Lan
     res += __execute('iptables -A FORWARD-RIVNET -i wlx00c0ca84a3dd -j ACCEPT')
 
-    # Port forwarding rivlink's irc
-    res += __execute('iptables -A PREROUTING-RIVNET -t nat -i ' + kwargs['wan_int'] + ' -p tcp --dport 6667 -j DNAT --to 10.20.0.3:6667')
-    res += __execute('iptables -A FORWARD-RIVNET -p tcp --dport 6667 -j ACCEPT')
-    res += __execute('iptables -A PREROUTING-RIVNET -t nat -i ' + kwargs['wan_int'] + ' -p tcp --dport 6668 -j DNAT --to 10.20.0.3:6668')
-    res += __execute('iptables -A FORWARD-RIVNET -p tcp --dport 6668 -j ACCEPT')
-
-    # VPN
-    res += __execute('iptables -A INPUT-RIVNET -s 10.8.0.0/24 -j ACCEPT')
-    res += __execute('iptables -A FORWARD-RIVNET -p tcp -s 10.8.0.0/24 -j ACCEPT')
-    res += __execute('iptables -A POSTROUTING-RIVNET -t nat -s 10.8.0.0/24 -j MASQUERADE')
-    res += __execute('iptables -A POSTROUTING-RIVNET -t nat -s 10.8.0.0/24 -j MASQUERADE')
-    res += ["\n"]
-    
     res += ["Clients: "]
     res += ["\n"]
 
