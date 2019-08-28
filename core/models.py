@@ -9,6 +9,8 @@ from django.db import models
 from django.db.models import Q, Sum
 from django.dispatch import receiver
 import unicodedata
+import os
+import os.path
 
 class Port(models.Model):
     name = models.CharField(max_length=10, blank=False)
@@ -23,6 +25,7 @@ class Period(models.Model):
     name = models.CharField(max_length=40, null=False, blank=False)
     begin = models.DateField(null=False, blank=False)
     end = models.DateField(null=False, blank=False)
+    mac_filtering = models.BooleanField(default=True, blank=False)
 
     def sum(self):
         total = Activation.objects.filter(period=self).aggregate(total=Sum("subscription"))['total']
@@ -33,6 +36,13 @@ class Period(models.Model):
 
 
     def __str__(self):
+        if not mac_filtering:
+            if os.path.isfile('../firewall/firewall_script_nomac.py')
+                os.rename('../firewall/firewall_script.py', '../firewall/firewall_script_mac.py')
+                os.rename('../firewall/firewall_script_nomac.py', '../firewall/firewall_script.py')
+        else if os.path.isfile('../firewall/firewall_script_mac.py')
+                os.rename('../firewall/firewall_script.py', '../firewall/firewall_script_nomac.py')
+                os.rename('../firewall/firewall_script_mac.py', '../firewall/firewall_script.py')
         return (self.name)
 
 class Client(models.Model):
