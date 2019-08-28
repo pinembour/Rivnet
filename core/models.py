@@ -37,10 +37,10 @@ class Period(models.Model):
 
     def __str__(self):
         if not mac_filtering:
-            if os.path.isfile('../firewall/firewall_script_nomac.py')
+            if os.path.isfile("../firewall/firewall_script_nomac.py"):
                 os.rename('../firewall/firewall_script.py', '../firewall/firewall_script_mac.py')
                 os.rename('../firewall/firewall_script_nomac.py', '../firewall/firewall_script.py')
-        else if os.path.isfile('../firewall/firewall_script_mac.py')
+        elif os.path.isfile('../firewall/firewall_script_mac.py'):
                 os.rename('../firewall/firewall_script.py', '../firewall/firewall_script_nomac.py')
                 os.rename('../firewall/firewall_script_mac.py', '../firewall/firewall_script.py')
         return (self.name)
